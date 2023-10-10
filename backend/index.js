@@ -25,6 +25,20 @@ app.use("/api/comments",commentRoute)
 
 const port = process.env.PORT
 
+const storage = multer.diskStorage({
+    destination:(req,file,fn)=>{
+        fn(null, "images")
+    },
+    filename:(req,file,fn)=>{
+        fn(null,req.body.img)
+        // fn(null, "image1.jpeg")
+    }
+})
+
+const upload=multer({storage:storage})
+app.post("/api/upload",upload.single("file"),(req, res) => {
+    res.status(200).json("Image has been uploaded successfully")
+})
 
 connect().then(() => {
     try {
