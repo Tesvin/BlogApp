@@ -53,7 +53,7 @@ router.delete("/:id",verifyToken,async (req,res)=>{
 //GET POST DETAILS
 router.get("/:id",async (req,res)=>{
     try{
-        const post=await Post.findById(req.params.id)
+        const post=await Post.findById(req.params.id).sort({createdAt: -1})
         res.status(200).json(post)
     }
     catch(err){
@@ -61,8 +61,18 @@ router.get("/:id",async (req,res)=>{
     }
 })
 
+router.get("/", async (req, res) => {
+    try {
+        const posts = await Post.find().sort({createdAt: -1})
+        res.status(200).json(posts)    
+    } catch (err) {
+        res.status(500).json(err)
+    }
+    
+})
+
 //GET POSTS
-router.get("/",async (req,res)=>{
+router.get("/query",async (req,res)=>{
     const query=req.query
     
     try{
@@ -76,6 +86,23 @@ router.get("/",async (req,res)=>{
         res.status(500).json(err)
     }
 })
+
+//GET POSTS
+// router.get("/",async (req,res)=>{
+//     const query=req.query
+    
+//     try{
+//         const searchFilter={
+//             title:{$regex:query.search, $options:"i"}
+//         }
+//         const posts=await Post.find(query.search?searchFilter:null)
+//         res.status(200).json(posts)
+//     }
+//     catch(err){
+//         res.status(500).json(err)
+//     }
+// })
+
 
 //GET USER POSTS
 router.get("/user/:userId",async (req,res)=>{
